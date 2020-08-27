@@ -47,7 +47,7 @@ function every(array, callback, thisArg) {
     everyCallback = callback.bind(thisArg);
   }
 
-  for (var i = 0; i<length; i++) {
+  for (var i = 0; i < length; i++) {
     if(i in array){
       if(!everyCallback(array[i], i, array)) {
       return false;
