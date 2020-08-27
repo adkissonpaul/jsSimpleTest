@@ -1,0 +1,152 @@
+<script src="../simpleTest.js"></script>
+<script>
+
+/*
+The some() method tests whether at least one element in the array passes the test implemented by the provided function.
+
+  Function signature:
+    some([array], callback(element [, index [array]])[, thisArg])
+  
+    NATIVE: arr.some(callback(element[, index[, array]])[, thisArg])
+
+  Parameters:
+    callback:
+      element
+      index
+      array
+    thisArg
+
+  Return value: 
+    A boolean value.
+    True if the callback returns a truthy value for at least one element in the array. 
+    Otherwise, false.
+
+  Requirements:
+
+    COMPLETE: It should run array.length times.
+    COMPLETE: It should pass in ith element as the first argument.
+    COMPLETE: It should pass in index as the second argument.
+    COMPLETE: It should pass in the original array as the third argument.
+    COMPLETE: It should accept a thisArg.
+    COMPLETE: It should return true if ANY elements returns a truthy value.
+    COMPLETE: It should return immediately when it finds a truthy value.
+    COMPLETE: It should return false if it finds no truthy elements.
+    COMPLETE: It should only run for indexes with an assigned value.
+    COMPLETE: It should not run on deleted indexes.
+    COMPLETE: It should not mutate the array.
+    COMPLETE: It should not run on elements that are appended to the array after the call to some begins.
+    COMPLETE: It should return false for an empty array.
+*/
+
+function some(array, callback, thisArg) {
+  var length = array.length;
+  var someCallback = callback;
+
+  if(thisArg){
+    someCallback = callback.bind(thisArg);
+  }
+
+  for (var i = 0; i < length; i++){
+    if(i in array) {
+      if(someCallback(array[i], i, array)){
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+tests({
+  'It should run the callback function array.length times if callback returns true.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+
+    some([1,2,3], function() {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 3);
+  },
+  'It should pass in the ith element as the first argument to the callback.': function() {
+    some([1], function(element) {
+      eq(element, 1);
+    });
+  },  
+  'It should pass in the ith position as the second argument to the callback.': function() {
+    some([1], function(element, index) {
+      eq(index, 0);
+    });
+  }, 
+  'It should pass in the original array as the third callback.': function() {
+    testArray = [1, 2, 3];
+    some(testArray, function(element, index, array){
+      eq(testArray, array)
+    })
+  },  
+  'It should accept an optional this object.': function () {
+    some([1], function () {
+      eq(this.description, 'I should be accessible inside of the callback.');
+    }, {description: 'I should be accessible inside of the callback.'});
+  },
+  'It should return true if ANY elements returns a truthy value.': function() {
+    var testArray = [1, 2, 3];
+    var result = some(testArray, function(element) {
+      return element === 2;
+    })
+    eq(result, true);
+  },
+  'It should return immediately when it finds a truthy value.': function() {
+    var numberOfTimesCallbackHasRun = 0;
+    some([1, 2, 3, 4, 5], function(element) {
+      numberOfTimesCallbackHasRun++;
+      return element === 3;
+    });
+    eq(numberOfTimesCallbackHasRun, 3);
+  },
+  'It should return false if it finds no truthy elements.': function() {
+    var testArray = [1, 2, 3];
+    var result = some(testArray, function(element) {
+      return element === 4;
+    })
+    eq(result, false);
+  },
+  'It should only run for indexes with an assigned value.': function() {
+    var testArray = [,1,,2,3];
+    var numberOfTimesCallbackHasRun = 0;
+    some(testArray, function(element) {
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 3);
+  }, 
+  'It should not run on deleted indexes.': function () {
+    var testArray = [1, 2];
+    numberOfTimesCallbackHasRun = 0;
+    some(testArray, function(element) {
+      delete testArray[1];
+      numberOfTimesCallbackHasRun++;
+    })
+    eq(numberOfTimesCallbackHasRun, 1)
+  },
+  'It should not mutate the array.': function () {
+    var testArray = [1, 2, 3];
+    some(testArray, function(element, array) {
+      return element === 3;
+      eq(testArray, array);
+    })
+  },
+  'It should not visit any elements added to the array after the call to find begins.': function() {
+    var testArray = [1];
+    numberOfTimesCallbackHasRun = 0; 
+    some(testArray, function() {
+      testArray.push(2);
+      numberOfTimesCallbackHasRun++;
+    });
+    eq(numberOfTimesCallbackHasRun, 1);
+  }, 
+  'It should return false if the array is empty.': function() {
+    var result = some([], function(element) {
+      return element < 1;
+    })
+    eq(result, false)
+  }
+});
+
+</script>
