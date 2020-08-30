@@ -1,0 +1,142 @@
+<script src="../simpleTest.js"></script>
+<script>
+
+/*
+  Native implementation:
+
+    const array1 = ['a', 'b', 'c'];
+    const array2 = ['d', 'e', 'f'];
+    const array3 = array1.concat(array2);
+
+    console.log(array3);
+
+
+  The concat() method is used to merge two or more arrays. This method does not change the existing arrays, but instead returns a new array.
+
+  Function signature: 
+  
+    const newArray = concat(originalArray, [value1[,value2[, ...[valueN]]]])
+  
+    NATIVE: const new_array = old_array.concat([value1[, value2[, ...[, valueN]]]])
+
+  Parameters:
+    valueN - arrays and/or values to concatenate.
+
+
+
+  Return value:
+    a new array. 
+    If all valueN parameters are omitted, concat returns a shallow copy of the existing array on which it is called.
+
+
+  Requirements:
+    COMPLETE: It should return an array.
+    COMPLETE: It should return a newArray, not originalArray.
+    COMPLETE: It should consist of the elements in the object followed by elements of the argument from left to right.
+    COMPLETE: It should not mutate or alter any of the arrays.
+    COMPLETE: If argument is array, it should add each element in the array in order.
+    COMPLETE: If argument is not array, it should add the argument itself.
+    COMPLETE: It should take multiple arguments.
+    COMPLETE: It should copy strings, numbers, and booleans as data types.
+    COMPLETE: It should not recurse into nested arguments.
+    COMPLETE: It should copy object references into the newArray. (Both originalArray and newArray refer to the same object.)
+    COMPLETE: It should have changes that are made to the reference object be visible to both originalArray and newArray.   
+
+*/
+
+function concat(array) {
+  var concatArray = [];
+  
+  //iterates over the arguments.
+  for(var i = 0; i < arguments.length; i++) {
+    //Checks to see if the argument is an array.
+    if(Array.isArray(arguments[i])) {
+      //iterates over the array.
+      for(var j = 0; j < arguments[i].length; j++) {
+        //pushes the elements from the array into the newArray.
+        concatArray.push(arguments[i][j]);
+      }
+    } else {
+      //if argument is not an array, pushes the elements onto the new array.
+      concatArray.push(arguments[i]);
+    }
+  }
+  return concatArray; 
+};
+
+tests({
+  'It should return an array.': function(){
+    var originalArray = [1]
+    var concatArray = concat(originalArray);
+    eq(Array.isArray(concatArray), true);
+  },
+
+  'It should return a newArray, not the originalArray.': function() {
+    var originalArray = [];
+    var concatArray = concat(originalArray);
+    eq(concatArray !== originalArray, true);
+  },
+  'It should consist of the elements in the object followed by elements of the argument from left to right.': function() {
+    var testArray = [1,2,3];
+    var concatArray = concat(testArray);
+    eq(concatArray[0], 1);
+  },
+  'If argument is array, it should add each element in the array in order.': function() {
+    var testArray1 = [1, 2, 3];
+    var testArray2 = [4, 5];
+    var concatArray = concat(testArray1, testArray2);
+    eq(concatArray[3], 4);
+  },
+  'If argument is not array, it should add the argument itself.': function() {
+    var testArray1 = [1, 2, 3];
+    var testNotAnArray = 4;
+    var concatArray = concat(testArray1, testNotAnArray);
+    eq(concatArray[3], 4);
+  },
+  'It should take multiple arguments.': function() {
+    var testArray = [1, 2, 3];
+    var testArray2 = ['a', 'b', 'c']
+    var concatArray = concat(testArray, 4, 5, 6, testArray2);
+    console.log(concatArray);
+    eq(concatArray[3], 4);
+    eq(concatArray[6], 'a');
+  },
+  'It should not mutate or alter any of the arrays.': function() {
+    var testArray1 = [1, 2, 3];
+    var testArray2 = ['a','b','c'];
+    var concatArray = concat(testArray1, testArray2);
+    console.log(concatArray);
+    eq(testArray1, testArray1);
+    eq(testArray2, testArray2);
+  },
+  'It should copy strings, numbers, and booleans as data types.': function() {
+    var testString = 'string';
+    var testNumber = 1;
+    var testBoolean = true;
+    var concatArray = concat(testString, testNumber, testBoolean)
+    eq(typeof concatArray[0] === 'object', false);
+    eq(typeof concatArray[1] === 'object', false);
+    eq(typeof concatArray[2] === 'object', false);
+  },
+  'It should not recurse into nested arguments.': function() {
+    var testArray1 = [1, 2, 3];
+    var testArray2 = [[4, 5],[6,7]];
+    var concatArray = concat(testArray1, testArray2);
+        console.log(concatArray)
+    eq (concatArray.length, 5)
+  },
+  'It should copy object references into the newArray. (Both originalArray and newArray refer to the same object.)': function() {
+    var testArray = [1, 2, 3];
+    var concatArray = concat(testArray, 4);
+    eq(concatArray[1], testArray[1]);
+  },
+  'It should have changes that are made to the reference object be visible to both originalArray and newArray.': function() {
+    var testObj = {number: 1}
+    var testArray = [3, 4];
+    var concatArray = concat(testObj, testArray);
+    testObj.number = 2;
+    eq(concatArray[0].number, 2);
+  },
+});
+
+</script>
