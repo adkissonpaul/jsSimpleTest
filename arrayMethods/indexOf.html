@@ -1,0 +1,90 @@
+<script src="../simpleTest.js"></script>
+<script>
+/*
+
+The indexOf() method returns the first index at which a given element can be found in the array, or -1 if it is not present.
+
+  Function signature:
+    indexOf([array], searchElement,[, fromIndex])
+  
+    NATIVE: arr.indexOf(searchElement[, fromIndex])
+
+  Callback parameters:
+    searchElement 
+    fromIndex (the index to start the search at.)
+
+  Return value: 
+    The first index of the element in the array.
+    -1 if not found.
+
+  Requirements:
+    COMPLETE: It should return the first index of a matching element in an array.
+    COMPLETE: It should use strict equality (===) to compare searchElement to elements of the array.
+    COMPLETE: It should return -1 if no matching element.
+    COMPLETE: It should start search at fromIndex.
+    COMPLETE: It should return -1 if the fromIndex is >= array.length.
+    COMPLETE: It should take a negative index as the offset from the end of the array.
+    COMPLETE: It should search from front to back.
+
+*/
+
+function indexOf(array, searchElement, fromIndex){
+  var length = array.length;
+
+//Checks if there is a fromIndex.
+  if(!fromIndex) { 
+    fromIndex = 0;
+  }
+//Checks if the index is negative, then does the weird offset thing.
+  if(fromIndex < 0) { 
+    fromIndex = length + fromIndex;
+  }
+
+  for(var i = fromIndex; i < length; i++) {
+    if(searchElement === array[i]) {
+      return i;
+    } 
+  } 
+  return -1; 
+};
+
+tests({
+  'It should return the first index of a matching element.': function() {
+    var result = indexOf([1, 2, 3], 3);
+    eq(result, [2]);
+  },
+  'It should use strict equality (===) to compare searchElement to elements of the array.': function() {
+    var result = indexOf([1, 2, '3', 3], 3);
+    eq(result, [3]);
+  },
+  'It should return -1 if no matching element.': function() {
+    var result = indexOf([1, 2, 3], 4);
+    eq(result, -1);
+  },
+  'It should start search at fromIndex.': function() {
+    var result = indexOf([1, 1, 2, 3], 1, 1)
+    eq(result, 1)
+  },
+  'It should return -1 if the fromIndex is >= array.length.': function() {
+    var result = indexOf([1], 1, 2)
+    eq(result, -1)
+  },
+  'It should return -1 if the fromIndex is >= array.length.': function() {
+    var result = indexOf([1, 2, 3], 1, 4)
+    eq(result, -1)
+  },  
+  'It should take a negative index as the offset from the end of the array.': function() {
+    var testArray = [1, 2, 3, 4, 5];
+    var result = indexOf(testArray, 2, -3)
+    var result2 = indexOf(testArray, 2, -4)
+
+    eq(result, -1);
+    eq(result2, 1)
+  }, 
+  'It should search from front to back.': function () {
+    var result = indexOf([1, 2, 3], 1)
+    eq(result, 0)
+  }
+});
+
+</script>
