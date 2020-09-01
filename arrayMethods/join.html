@@ -1,0 +1,88 @@
+<script src="../simpleTest.js"></script>
+<script>
+/*
+
+The join() method creates and returns a new string by concatenating all of the elements in an array (or an array-like object), separated by commas or a specified separator string. If the array has only one item, then that item will be returned without using the separator.
+
+  Function signature:
+    join([array], separator)
+  
+    NATIVE: arr.join([separator])
+
+
+  Parameters:
+    separator
+
+  Return value: 
+    A string with all array elements joined.
+
+  Requirements:
+    COMPLETE: It should return a string.
+    COMPLETE: It should have each element separated by a separator.
+    COMPLETE: The final element should not have a separator.
+    COMPLETE: It should accept a specified separator string.
+    COMPLETE: It should join characters without any characters between them if separator is any empty string.
+    COMPLETE: It should return the solo item if an array is only one item, without using the separator.
+    COMPLETE: It should return an empty string if an element is undefined, null, or an empty array.
+*/
+
+function join(array, separator){
+  var length = array.length;
+  var finalString = '';
+
+//Checks if there is a separator. if(separator === undefined) also works.
+  if(arguments.length < 2) {
+    separator = ',';
+  }
+
+  for(var i = 0; i < length; i++) {
+    if(array[i] == undefined || array[i] == null) {
+      array[i] = '';
+    }
+    if(i === length - 1) {
+      finalString = finalString += array[i];
+    } else {
+      finalString = finalString += array[i] += separator;
+    }
+  }
+  return finalString;
+};
+
+tests({
+  'It should return a string.': function() {
+    var testArray = ['a'];
+    var result = join(testArray);
+    eq(result, 'a');
+  },
+  'It should have each element separated by commas.': function() {
+    var testArray = ['a', 'b'];
+    var result = join(testArray);
+    eq(result, 'a,b');
+  },
+  'The final element should not have a separator.': function() {
+    var testArray = ['a','b','c'];
+    var result = join(testArray);
+    eq(result, 'a,b,c');
+  },
+  'It should accept a specified separator string.': function() {
+    var testArray = ['a','b'];
+    var result = join(testArray, ' separator ');
+    eq(result, 'a separator b');
+  },
+  'It should join characters without any characters between them if separator is any empty string.': function() {
+    var testArray = ['a','b'];
+    var result = join(testArray, '');
+    eq(result, 'ab');
+  },
+  'It should return the solo item if an array is only one item, without using the separator.': function() {
+    var testArray = ['a'];
+    var result = join(testArray);
+    eq(result, 'a');
+  },
+  'It should return an empty string if element is undefined, null, or an empty array.': function() {
+    var testArray = [undefined, null];
+    var result = join(testArray);
+    eq(result, ',');
+  }
+});
+</script>
