@@ -1,0 +1,101 @@
+<script src="../simpleTest.js"></script>
+<script>
+/*
+
+The push() method adds one or more elements to the end of an array and returns the new length of the array.
+
+  Function signature:
+    push([array], ([element1,[, ...[, elementN]]])
+  
+    NATIVE: arr.push([element1[, ...[, elementN]]])
+
+
+  Parameters:
+    element to be added
+
+  Return value: 
+    A new length property of the object.
+
+  Requirements:
+    COMPLETE: It should append values to the end of an array.
+    COMPLETE: It should be able to add multiple elements to the end of an array.
+    COMPLETE: It should return the new length property.
+    COMPLETE: It should use index 0 if length cannot be determined (and create a length property).
+    COMPLETE: It should increase the length of an array-like object.
+    COMPLETE: It should work on objects if given a length.
+    COMPLETE: It should create a length if array-like object has no length property.'
+
+*/
+
+function push(array, element){ 
+var length;
+//Checks if array has a length. Gives it a length.
+  if(array.length === NaN || array.length === undefined || typeof array.length === 'string') {
+    array.length = 0;
+  }
+
+  length = array.length;
+  
+  for(var i = 1; i < arguments.length; i++) {
+  //Adds next argument to the end of the array.
+    array[array.length] = arguments[i];  
+    length++     
+//Checks if array is an array or an array-like object; increases the length of the array-like object.
+    if(typeof array === "object" && Array.isArray(array) === false) {
+      array.length++;
+    }
+  } 
+  return length;
+};
+
+tests({
+  'It should append values to an array': function() {
+    var originalArray = [1];
+    push(originalArray, 2);
+    eq(originalArray[1], 2);
+  },
+  'It should be able to add multiple elements to the end of an array.': function() {
+    var originalArray = [1];
+    push(originalArray, 2, 3);
+    eq(originalArray[2], 3);
+  },
+  'It should return the new length property.': function() {
+    var originalArray = [1];
+    var result = push(originalArray, 2);
+    eq(result, 2);
+  },
+  'It should use index 0 if length cannot be determined (and create a length property).': function() {
+    var originalArray = [];
+    var result = push(originalArray, 1);
+    eq(result, 1);
+  },
+ 'If the length property cannot be converted into a number, the index used is 0.': function() {
+    var testArrayLikeObject = {
+      length: "length that is not a number"
+    };
+    push(testArrayLikeObject, 1, 2);
+    eq(testArrayLikeObject[0], 1);
+    eq(testArrayLikeObject[1], 2);
+ }, 
+ 'It should work on objects (if given a length).': function() {
+    var testObj = {name:'Object', length: 1};
+    var result = push(testObj, 2);
+
+    eq(testObj[1], 2);
+    eq(testObj.length, 2);
+  },
+ 'It should increase the length of an array-like object.': function() {
+    var testArrayLikeObject = {
+      length: "length that is not a number"
+    };
+    result = push(testArrayLikeObject, 1, 2);
+    eq(result, 2);
+ },
+  'It should create a length if array-like object has no length property.': function() {
+  var testObj = {};
+  push(testObj, 'test');
+  eq(testObj.length, 1);
+  },
+});
+
+</script>
