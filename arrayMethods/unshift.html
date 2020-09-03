@@ -1,0 +1,69 @@
+<script src="../simpleTest.js"></script>
+<script>
+/*
+
+The unshift() method adds one or more elements to the beginning of an array and returns the new length of the array.
+
+  Function signature:
+    unshift([array], ([element1,[, ...[, elementN]]])
+  
+    NATIVE: arr.unshift(element1[, ...[, elementN]])
+
+  Parameters:
+    Elements to be added to the front of the array.
+
+  Return value: 
+    A new length property of the object.
+
+  Requirements:
+    COMPLETE: It should append values to the front of an array.
+    COMPLETE: It should be able to add multiple elements to the front of an array.
+    COMPLETE: It should return the new length property.
+    COMPLETE: It should add multiple elements in a chunk.
+    COMPLETE: It should add individual elements not in a chunk.
+
+*/
+
+function unshift(array, element) {
+  for(var j = arguments.length - 1; j >= 1; j--) {
+   for(var i = array.length - 1; i >= 0; i--) {
+    array[i + 1] = array[i];
+    }
+  array[0] = arguments[j];      
+  }
+  return array.length;
+};
+
+tests({
+  'It should append values to the front of an array': function() {
+    var originalArray = [2];
+    unshift(originalArray, 1);
+    eq(originalArray[0], 1);
+  },
+  'It should be able to add multiple elements to the front of an array.': function() {
+    var originalArray = [3];
+    unshift(originalArray, 1, 2);
+    console.log(originalArray)
+    eq(originalArray[1], 2);
+  },
+  'It should return the new length property.': function() {
+    var originalArray = [1];
+    var result = unshift(originalArray, 2);
+    eq(result, 2);
+  },
+  'It should add multiple elements in a chunk.': function() {
+    var originalArray = ['already here'];
+    unshift(originalArray, 'elements', 'in', 'a', 'chunk');
+    eq(originalArray[0], 'elements');
+  },
+  'It should add individual elements not in a chunk.': function() {
+    var originalArray = ['already here'];
+    unshift(originalArray, 'elements');
+    unshift(originalArray, 'in');
+    unshift(originalArray, 'a');
+    unshift(originalArray, 'chunk');
+    eq(originalArray[0], 'chunk');
+  }
+});
+
+</script>
