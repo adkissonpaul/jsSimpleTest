@@ -1,0 +1,153 @@
+<script src="../simpleTest.js"></script>
+<script>
+/*
+
+The copyWithin() method shallow copies part of an array to another location in the same array and returns it without modifying its length.
+
+  Function signature:
+    copyWithin([array], (target[, start[, end]]))
+  
+    NATIVE: arr.copyWithin(target[, start[, end]])
+
+
+  Parameters:
+
+    target 
+      Zero-based index at which to copy the sequence to. If negative, target will be counted from the end
+    Optional start index.
+      Zero-based index at which to start copying elements from. If negative, start will be counted from the end. 
+    Optional end index.
+      Zero-based index at which to end copying elements from. copyWithin copies up to but not including end. If negative, end will be counted from the end.
+
+  Return value: 
+    The modified array.
+
+  Requirements:
+    COMPLETE: It should copy part of an array.
+    COMPLETE: It should start copying at index[start].
+    COMPLETE: It should start from index 0 if not start. 
+    COMPLETE: It should end copy at index[end] but not include index[end].
+    COMPLETE: It should default to array.length if end is ommitted.
+    COMPLETE: It should insert the copy at index[target].
+    COMPLETE: It should not modify the length of the array.
+    COMPLETE: It should count from back from the end if target is negative.
+    COMPLETE: It should copy nothing if target is greater than array.length and return the array.
+    COMPLETE: It should trim to fit if target is positioned after start.
+    COMPLETE: It should count from the end if end is negative.
+    COMPLETE: It should work even if target index is a higher number than length of temp array.
+
+*/
+
+function copyWithin(array, target, start, end) {
+  var length = array.length;
+  var temp = [];
+  var tempStart = 0;
+  var tempIndex = 0;
+
+  if(!start) {
+    start = 0;
+  }
+
+  if(start < 0) {
+    start = length + start;
+  }
+
+  if(!end) {
+    end = array.length;
+  }
+
+  if(end < 0) {
+    end = length + end;
+  }
+
+  if(target < 0) {
+    target = length + target;
+  }
+
+  if (target > length) {
+    return array;
+  }
+
+  for(var i = start; i < end; i++) {
+    if(i in array) {
+      temp[tempStart] = array[i];
+    }         
+    tempStart++;
+  }
+//Makes the for loop iterate to the end of temp (even if target is higher than temp.length).  
+  var newLength = temp.length + target;
+
+  for(var i = target; i < newLength; i++) {
+      array[i] = temp[tempIndex];
+      tempIndex++
+    }
+  array.length = length;  
+  return array;
+};
+
+tests({
+  'It should copy part of an array.': function() {
+    var testArray = ['first', 'second', 'third', 'fourth', 'fifth'];
+    copyWithin(testArray, 0, 2, 3);
+    eq(testArray[0], 'third');
+  },
+  'It should start at index[start]': function(){
+    var testArray = [1, 2, 3];
+    copyWithin(testArray, 0, 1, 2);
+    eq(testArray[0], 2)
+  },
+  'It should start from index[0] if no start is provided.': function() {
+    var testArray = [1, 2, 3];
+    copyWithin(testArray, 1);
+    eq(testArray[1], 1); 
+  },
+  'It should end at index[end] but not include index[end].': function() {
+    var testArray = [1, 2, 3];
+    copyWithin(testArray, 0, 1, 2);
+    eq(testArray[2], 3);
+  },
+  'It should default to array.length if end is ommitted.': function() {
+    var testArray = [1, 2, 3, 4];
+    copyWithin(testArray, 0, 1);
+    eq(testArray[2], 4)
+  },
+  'It should insert the copy at index[target]': function() {
+    var testArray = [1, 2, 3, 4];
+    copyWithin(testArray, 1);
+    eq(testArray[1], 1);
+  },
+  'It should not modify the length of the array.': function() {
+    var testArray = [1, 2, 3];
+    copyWithin(testArray, 0, 1, 2);
+    eq(testArray.length, 3);
+  },
+  'It should count from back from the end if target is negative.': function() {
+    var testArray = [1, 2, 3, 4, 5];
+    copyWithin(testArray, -3, 0, 2);
+    eq(testArray[2], 1);
+  },
+  'It should copy nothing if target is greater than array.length and return the array.': function() {
+    var testArray = [1, 2];
+    copyWithin(testArray, 2);
+    eq(testArray[0], 1)
+  },
+  'It should trim to fit if target is positioned after start.': function() {
+    var testArray = [1, 2, 3, 4, 5];
+    var result = copyWithin(testArray, 1, 0, 5);
+    eq(result[4], 4)
+  },
+  'It should count from the end if end is negative.': function () {
+    var testArray = [1, 2, 3, 4, 5];
+    copyWithin(testArray, 0, 2, -1);
+    eq(testArray[0], 3)
+    eq(testArray[1], 4)
+    eq(testArray[2], 3)
+  },
+  'It should work if target index is a higher number than temp.length (section of array to be copied).': function() {
+    var testArray = [1, 2, 3, 4, 5];
+    copyWithin(testArray, 4, 0, 2);
+    eq(testArray[4], 1)
+  }, 
+});
+
+</script>
